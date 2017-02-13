@@ -11,53 +11,109 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-public class Card : HasId
+
+//Loan Lease Option Model
+//one possible loan option
+public class LoanLeaseOption : HasId
 {
     [Required]
     public int Id { get; set; }
     [Required]
-    public string Title { get; set; }
+    public double percentDown { get; set; }
     [Required]
-    [StringLength(250, MinimumLength = 10)]
-    public string Text { get; set; }
+    
+    public double MonthlyPayment { get; set; }
 
-    public int CardListId {get;set;}
+    public int LoanTerm { get; set; }
+
+    public int ProjectId {get;set;}
 }
 
-public class CardList : HasId {
+
+//Applicant Model
+//Includes all stored fields for under the applicant 
+public class Applicant : HasId {
     [Required]
     public int Id { get; set; }
     [Required]
-    public string Summary { get; set; }
+    [StringLength(40, MinimumLength = 1)]
+    public string Name { get; set; }
     [Required]
-    public List<Card> Cards { get; set; }
+    [StringLength(40, MinimumLength = 1)]
+    public string Address1 {get; set;}
+    [Required]
+    [StringLength(40, MinimumLength = 1)]
+    public string Address2 { get; set; }
+    [Required]
+    [StringLength(40, MinimumLength = 1)]
+    public string City { get; set; }
+    [Required]
+    [StringLength(30, MinimumLength = 1)]
+    public string state { get; set; }
 
-    public int BoardId {get;set;}
+    public int Zip { get; set; }
+
+    public string Country { get; set; }
+    [Required]
+    [StringLength(40, MinimumLength = 1)]
+    public string Email { get; set; }
+    [Required]
+    [StringLength(40, MinimumLength = 1)]
+    public int Phone { get; set; }
+
+    public int ProjectId {get;set;}
 }
 
-public class Board : HasId {
+//Porject Model 
+//This will be the Root object of the JSON data
+public class Project : HasId {
     [Required]
     public int Id { get; set; }
+    
+    public int projectNum { get; set; }
+
+    public int revisionNum { get; set; }
     [Required]
-    public string Title { get; set; }
+    public LoanLeaseOption LoanOption { get; set; }
     [Required]
-    public List<CardList> Lists { get; set; }
+    public int FinancialOption { get; set; }
+    [Required]
+    public int installerXREF { get; set; }
+    [Required]
+    public Applicant applicant { get; set; }
+    [Required]
+    public Applicant coapplicant { get; set; }
+    [Required]
+    public int applicantSSN { get; set; }
+    [Required]
+    public int applicantDriversLicenceNum { get; set; }
+    [Required]
+    public string StateOnApplicantLicence { get; set; }
+    [Required]
+    public double houseHoldIncom { get; set; }
+
+    public int AuthorizationNum { get; set; }
+    
+    public int Retruncode { get; set; }
+    
+    public string Message{ get; set; }
+
 }
 
 // declare the DbSet<T>'s of our DB context, thus creating the tables
 public partial class DB : IdentityDbContext<IdentityUser> {
-    public DbSet<Card> Cards { get; set; }
-    public DbSet<CardList> CardLists { get; set; }
-    public DbSet<Board> Boards { get; set; }
+    public DbSet<LoanLeaseOption> LendLeaseOptions { get; set; }
+    public DbSet <Applicant> Applicants { get; set; }
+    public DbSet<Project> Projects { get; set; }
 }
 
 // create a Repo<T> services
 public partial class Handler {
     public void RegisterRepos(IServiceCollection services){
-        Repo<Card>.Register(services, "Cards");
-        Repo<CardList>.Register(services, "CardLists",
-            d => d.Include(l => l.Cards));
-        Repo<Board>.Register(services, "Boards",
-            d => d.Include(b => b.Lists).ThenInclude(l => l.Cards));
+        Repo<LoanLeaseOption>.Register(services, "LoanLeaseOptions");
+        Repo <Applicant>.Register(services,  "Applicants");
+        Repo<Project>.Register(services, "Projects");
+            //includes not workining but may be needed down the line
+            // d => d.Include(b => b.Applicants).Include(l => l.LendLeaseOptions));
     }
 }
