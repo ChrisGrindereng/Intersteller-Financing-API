@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
+
 public interface HasId {
     int Id { get; set; }
 }
@@ -19,6 +20,7 @@ public interface IRepository<T> where T: class, HasId {
     bool Update(T item);
     T Delete(int id);
     IEnumerable<T> FromSql(string sql);
+    
 }
 
 public class Repo<T> : IRepository<T> where T : class, HasId {
@@ -47,7 +49,7 @@ public class Repo<T> : IRepository<T> where T : class, HasId {
         });
     }
     
-    // CRUD stuff
+    // CRUD functions
     public T Create(T item){
         dbtable.Add(item);
         db.SaveChanges();
@@ -87,6 +89,7 @@ public class Repo<T> : IRepository<T> where T : class, HasId {
         }
         return null;
     }
+
 
     // SQL
     public IEnumerable<T> FromSql(string sql) => dbtable.FromSql(sql);

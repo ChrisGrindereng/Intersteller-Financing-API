@@ -25,4 +25,13 @@ public class ApplicantController : CRUDController<Applicant> {
 [Route("/api/Projects")]
 public class ProjectController : CRUDController<Project> {
     public ProjectController(IRepository<Project> r) : base(r){}
+
+    [HttpPost("Approval")]
+    public IActionResult Post([FromBody] Project item){
+        if(!ModelState.IsValid)
+            return BadRequest(ModelState.ToErrorObject());
+        r.Create(item);
+        return Ok(r.Read());
+    }
+    
 }

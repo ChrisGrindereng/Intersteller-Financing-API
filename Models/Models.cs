@@ -94,7 +94,7 @@ public class Project : HasId {
 
     public int AuthorizationNum { get; set; }
     
-    public int Retruncode { get; set; }
+    public int Returncode { get; set; }
     
     public string Message{ get; set; }
 
