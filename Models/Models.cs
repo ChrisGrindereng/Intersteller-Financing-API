@@ -61,8 +61,23 @@ public class Applicant : HasId {
     [StringLength(40, MinimumLength = 1)]
     public int Phone { get; set; }
 
-    public int ProjectId {get;set;}
+    public int ProjectId { get;set; }
 }
+
+//Model for the Approval Status Return JSON
+public class ApprovalStatus : HasId {
+    public int Id { get; set; }
+    public int AuthorizationNum { get; set; }
+    
+    public int ReturnCode { get; set; }
+    
+    public string Message{ get; set; }
+
+    public int ProjectId { get;set; }
+
+
+}
+
 
 //Porject Model 
 //This will be the Root object of the JSON data
@@ -90,20 +105,41 @@ public class Project : HasId {
     [Required]
     public string StateOnApplicantLicence { get; set; }
     [Required]
-    public double houseHoldIncom { get; set; }
+    public double houseHoldIncome { get; set; }
 
-    public int AuthorizationNum { get; set; }
-    
-    public int Returncode { get; set; }
-    
-    public string Message{ get; set; }
+    public ApprovalStatus ReturnApproval { get; set; }
+
+    public ApprovalStatus Approval(){
+        Random r = new  Random();
+        
+        projectNum = r.Next(1000, 9999);
+        revisionNum = r.Next(100000, 999999);
+
+        if (LoanOption.MonthlyPayment < (houseHoldIncome * .1)){
+            ReturnApproval.ReturnCode = 1;
+        }
+        else if (LoanOption.MonthlyPayment > (houseHoldIncome * .1))
+        { 
+            ReturnApproval.ReturnCode = 0;
+            ReturnApproval.Message = "Approval Rejected";
+            }
+        else{ReturnApproval.Message = "Approval Failed";}    
+
+        ReturnApproval.AuthorizationNum = revisionNum;
+
+        return ReturnApproval;
+    }
 
 }
+
+
 
 // declare the DbSet<T>'s of our DB context, thus creating the tables
 public partial class DB : IdentityDbContext<IdentityUser> {
     public DbSet<LoanLeaseOption> LendLeaseOptions { get; set; }
     public DbSet <Applicant> Applicants { get; set; }
+
+    public DbSet<ApprovalStatus> Approvals { get; set; }
     public DbSet<Project> Projects { get; set; }
 }
 
@@ -112,6 +148,7 @@ public partial class Handler {
     public void RegisterRepos(IServiceCollection services){
         Repo<LoanLeaseOption>.Register(services, "LoanLeaseOptions");
         Repo <Applicant>.Register(services,  "Applicants");
+        Repo<ApprovalStatus>.Register(services, "Approvals");
         Repo<Project>.Register(services, "Projects");
             //includes not workining but may be needed down the line
             // d => d.Include(b => b.Applicants).Include(l => l.LendLeaseOptions));

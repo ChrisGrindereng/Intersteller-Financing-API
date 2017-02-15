@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 [Route("/api/LoanLeaseOption")]
 public class LoanLeaseOptionController : CRUDController<LoanLeaseOption> {
@@ -26,12 +27,23 @@ public class ApplicantController : CRUDController<Applicant> {
 public class ProjectController : CRUDController<Project> {
     public ProjectController(IRepository<Project> r) : base(r){}
 
-    [HttpPost("Approval")]
+    [HttpPost("Submit")]
     public IActionResult Post([FromBody] Project item){
         if(!ModelState.IsValid)
             return BadRequest(ModelState.ToErrorObject());
         r.Create(item);
-        return Ok(r.Read());
+        return Ok(item.Approval());
     }
+    // [HttpGet("Approval")]
+    // public IActionResult Get{[FromQuery] }
+
+
+
+    // public ApprovalStatus LoadApproval( Project item ){
+        
+    //     return item.Approval();
+
+
+    // }
     
 }
