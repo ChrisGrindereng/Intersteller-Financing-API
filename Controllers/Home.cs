@@ -17,13 +17,13 @@ using Microsoft.Net.Http.Headers;
 [Route("/")]
 public class HomeController : Controller
 {
-    private IRepository<Card> cards;
-    private IRepository<CardList> lists;
-    private IRepository<Board> boards;
-    public HomeController(IRepository<Card> cards, IRepository<CardList> lists, IRepository<Board> boards){
-        this.cards = cards;
+    private IRepository<Project> Projects;
+    private IRepository<ProjectList> lists;
+    private IRepository<Root> Roots;
+    public HomeController(IRepository<Project> Projects, IRepository<ProjectList> lists, IRepository<Root> Roots){
+        this.Projects = Projects;
         this.lists = lists;
-        this.boards = boards;
+        this.Roots = Roots;
     }
 
     [HttpGet("/{username?}")]
@@ -36,14 +36,14 @@ public class HomeController : Controller
         return View("Index"); // View(new Student) method takes an optional object as a "model", typically called a ViewModel
     }
 
-    // [HttpGet("sql/cards")] // ?sql=....
-    // public IActionResult SqlCards([FromQuery]string sql) => Ok(cards.FromSql(sql));
+    // [HttpGet("sql/Projects")] // ?sql=....
+    // public IActionResult SqlProjects([FromQuery]string sql) => Ok(Projects.FromSql(sql));
 
     // [HttpGet("sql/lists")] // ?sql=....
     // public IActionResult SqlLists([FromQuery]string sql) => Ok(lists.FromSql(sql));
 
-    // [HttpGet("sql/boards")] // ?sql=....
-    // public IActionResult SqlBoards([FromQuery]string sql) => Ok(boards.FromSql(sql));
+    // [HttpGet("sql/Roots")] // ?sql=....
+    // public IActionResult SqlRoots([FromQuery]string sql) => Ok(Roots.FromSql(sql));
 
     // Handle file uploads?
     // <form method="post" enctype="multipart/form-data">

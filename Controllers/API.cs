@@ -2,25 +2,25 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-[Route("/api/card")]
-public class CardController : CRUDController<Card> {
-    public CardController(IRepository<Card> r) : base(r){}
+[Route("/api/Project")]
+public class ProjectController : CRUDController<Project> {
+    public ProjectController(IRepository<Project> r) : base(r){}
 
     [HttpGet("search")]
     public IActionResult Search([FromQuery]string term, int listId = -1){
-        return Ok(r.Read(dbset => dbset.Where(card => 
-            card.Title.ToLower().IndexOf(term.ToLower()) != -1
-            || card.Text.ToLower().IndexOf(term.ToLower()) != -1
+        return Ok(r.Read(dbset => dbset.Where(Project => 
+            Project.Title.ToLower().IndexOf(term.ToLower()) != -1
+            || Project.Text.ToLower().IndexOf(term.ToLower()) != -1
         )));
     }
 }
 
-[Route("/api/cardlist")]
-public class CardListController : CRUDController<CardList> {
-    public CardListController(IRepository<CardList> r) : base(r){}
+[Route("/api/Projectlist")]
+public class ProjectListController : CRUDController<ProjectList> {
+    public ProjectListController(IRepository<ProjectList> r) : base(r){}
 }
 
-[Route("/api/board")]
-public class BoardController : CRUDController<Board> {
-    public BoardController(IRepository<Board> r) : base(r){}
+[Route("/api/Root")]
+public class RootController : CRUDController<Root> {
+    public RootController(IRepository<Root> r) : base(r){}
 }
